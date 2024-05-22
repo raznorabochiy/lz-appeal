@@ -1,5 +1,27 @@
 import fs from "fs/promises";
 import { Presets, SingleBar } from "cli-progress";
+import { createLogger, format, transports } from "winston";
+import {FAIL_FILENAME, SUCCESS_FILENAME} from "./constants";
+
+const logFormat = format.printf(({ message }) => message);
+
+export const successLogger = createLogger({
+  format: logFormat,
+  transports: [
+    new transports.File({
+      filename: SUCCESS_FILENAME,
+    }),
+  ],
+});
+
+export const failLogger = createLogger({
+  format: logFormat,
+  transports: [
+    new transports.File({
+      filename: FAIL_FILENAME,
+    }),
+  ],
+});
 
 export async function loadFromFile(fileName: string) {
   const file = await fs.readFile(fileName, { encoding: "utf-8" });

@@ -3,3 +3,5 @@
 node_modules
 keys.txt
 proxy.txt
+success.txt
+fail.txt

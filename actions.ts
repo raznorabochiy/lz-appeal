@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { PROXY, VERIFY_URL, MESSAGE } from "./constants";
 import { VerifySignatureResponse } from "./types";
+import {successLogger} from "./utils";
 
 const agent = PROXY ? new HttpsProxyAgent(new URL(`http://${PROXY}`)) : undefined;
 
@@ -33,6 +34,8 @@ export async function verifySignatureRequest(address: string, signature: string)
   const data = await response.json() as VerifySignatureResponse;
 
   if (data.d.verifiedMessageLocation) {
+    const [, , id] = data.d.verifiedMessageLocation.split('/');
+    successLogger.info(`address: ${address} | Message Signature #${id}`);
     return `https://etherscan.io${data.d.verifiedMessageLocation}`;
   } else {
     throw new Error("Не могу получить подтверждение от etherscan")
